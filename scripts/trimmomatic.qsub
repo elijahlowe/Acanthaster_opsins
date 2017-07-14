@@ -1,0 +1,16 @@
+#!/bin/bash -login
+
+#PBS -l walltime=10:00:00,nodes=1:ppn=2,mem=16gb
+#PBS -N temp_name
+#PBS -A ged
+#PBS -M elijahlowe@gmail.com
+#PBS -m abe
+
+module load trimmomatic
+cd $SCRATCH/Acanthaster/trimmed_reads/trimmomatic/
+
+for i in ~/Acantaster/*_R1*gz;do java -jar $TRIM/trimmomatic PE -threads 4 $i ${i/_R1/_R2} $(basename ${i/fastq.gz/}trimnext.fq) s1_se $(basename ${i/_R1_001.fastq.gz/_R2_001}.trimnext.fq) s2_se ILLUMINACLIP:/opt/software/Trimmomatic/0.33/adapters/NexteraPE-PE.fa:2:40:15 LEADING:5 TRAILING:5 SLIDINGWINDOW:4:5 MINLEN:25;cat s1_se s2_se >> $(basename $i R1_001.fastq.gz)se.trim.fq;done
+
+
+qstat -f ${PBS_JOBID}
+

@@ -1,0 +1,14 @@
+#!/bin/bash -login
+
+#PBS -l walltime=96:00:00,nodes=1:ppn=2,mem=164gb
+#PBS -N gbr_hmmer
+#PBS -A ged
+#PBS -M elijahlowe@gmail.com
+#PBS -m abe
+
+module load hmmer
+
+cd $SCRATCH/Acanthaster/db
+hmmscan --tblout gbr_hmmer_seq_table.txt --domtblout gbr_hmmer_domain_table.txt Pfam-A.hmm gbr-cotsv1.0.EVM2.prot > gbr_hmmer_output
+qstat -f ${PBS_JOBID}
+
