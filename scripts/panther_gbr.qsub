@@ -1,0 +1,17 @@
+#!/bin/bash -login
+
+#PBS -l walltime=36:00:00,nodes=1:ppn=2,mem=16gb
+#PBS -N gbr_panther
+#PBS -A ged
+#PBS -M elijahlowe@gmail.com
+#PBS -m abe
+
+module load hmmer
+
+cd $SCRATCH/Acanthaster/db/panther
+
+export PERL5LIB=/mnt/home/loweelij/pantherScore2.0/lib:$PERL5LIB
+
+~/pantherScore2.0/./pantherScore2.0.pl -l /mnt/ls15/scratch/users/loweelij/Acanthaster/db/panther/PANTHER11.1 -D B -V -i ../gbr-cotsv1.0.EVM2.prot -o gbr_panther.output -n
+
+qstat -f ${PBS_JOBID}
