@@ -1,0 +1,23 @@
+#!/bin/bash -login
+
+#PBS -l walltime=10:00:00,nodes=1:ppn=2,mem=16gb
+#PBS -N temp_name
+#PBS -A ged
+#PBS -M elijahlowe@gmail.com
+#PBS -m abe
+
+wk_dir=$SCRATCH/Acanthaster/salmon/salmon_0.8.2/
+reads_dir=~/Acanthaster_opsins
+cd $wk_dir
+
+# Download transcriptome
+wget http://marinegenomics.oist.jp/cots/download/gbr-cotsv1.0.EVM2.mrna.gz
+# Build salmon index from mapping
+~/salmon/./bin/salmon index -t gbr-cotsv1.0.EVM2.mrna.gz -i transcripts_index --type quasi -k 31
+# Map and quantify all mRNA samples
+for i in $read_dir/*R1*gz;do ~/salmon/bin/./salmon quant -i transcripts_index -l A -1 $i -2 ${i/R1/R2} -o $(basename $i R1_001.fastq.gz)quant --seqBias --gcBias;done
+# Rename quantification files with sample name
+for i in *quant;do cp $i/quant.sf ${i}.sf;done
+
+qstat -f ${PBS_JOBID}
+
