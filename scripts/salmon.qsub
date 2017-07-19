@@ -1,7 +1,7 @@
 #!/bin/bash -login
 
-#PBS -l walltime=10:00:00,nodes=1:ppn=2,mem=16gb
-#PBS -N temp_name
+#PBS -l walltime=00:30:00,nodes=1:ppn=1,mem=164gb
+#PBS -N Acanthaster_salmon
 #PBS -A ged
 #PBS -M elijahlowe@gmail.com
 #PBS -m abe
