@@ -1,0 +1,19 @@
+#!/bin/bash -login
+
+#PBS -l walltime=10:00:00,nodes=1:ppn=2,mem=16gb
+#PBS -N temp_name
+#PBS -A ged
+#PBS -M elijahlowe@gmail.com
+#PBS -m abe
+
+module load BLAST/2.2.26
+
+formatdb -i Ramirez+Feuda.fasta -p T
+formatdb -i gbr-cotsv1.0.EVM2.prot -p T
+blastall -p blastp -i gbr-cotsv1.0.EVM2.prot -d Ramirez+Feuda.fasta -e 1e-12 -o gbr.prot.x.Ramirez.output2
+blastall -p blastp -d gbr-cotsv1.0.EVM2.prot -i Ramirez+Feuda.fasta -e 1e-12 -o Ramirez.x.gbr.prot.output2
+python ~/ngs-course/blast/parse-blast-to-csv.py gbr.prot.x.Ramirez.output2 > gbr.prot.x.Ramirez.csv
+python ~/ngs-course/blast/parse-blast-to-csv.py Ramirez.x.gbr.prot.output2 > Ramirez.x.gbr.prot.csv
+python ~/ngs-course/blast/find-reciprocal-2.py gbr.prot.x.Ramirez.csv Ramirez.x.gbr.prot.csv > Ramirez.x.gbr.prot.recp.csv
+qstat -f ${PBS_JOBID}
+
