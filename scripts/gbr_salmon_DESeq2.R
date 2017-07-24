@@ -1,7 +1,7 @@
 library("tximportData")
 library("DESeq2")
 
-setwd("/Users/elijahlowe/Desktop/Acantaster/data/counts/gbr_mrna_salmon/")
+setwd("~/Acanthaster_opsins/data/")
 samples <- c("MIX1_S6", "MIX2_S7", "MIX3_S8",
              "EYES1A_S11","EYES1B_S12","EYES1D",
              "RN1_S3", "RN2_S4", "RN3_S5",
@@ -81,65 +81,63 @@ summary(rnVtf)
 
 ciliary_opsin=c("gbr.65.46.t1","gbr.65.45.t1","gbr.508.2.t1")
 melatonin=c("gbr.212.22.t1")
-GO_c_opsin=c("gbr.470.6.t1")
-echinopsinsB=c("gbr.176.10.t1")
+go_opsin=c("gbr.470.6.t1")
+chaopsin=c("gbr.176.10.t1")
 neuropsins=c("gbr.35.57.t1")
 peropsins=c("gbr.31.87.t1")
 rhabdomeric=c("gbr.176.5.t1")
 rgr_opsins=c("gbr.37.118.t1")
 
+cond<-c(eyes,rn,tf,eyesVrn,eyesVtf,rnVtf)
+titles<-c("Eyes vs mixed","Radial nerve vs mixed","Tube feet vs mixed",
+          "Eyes vs Tube feet","Eyes vs Radial nerve","Radial nerve vs Tube feet")
 
 png("colored_opsins_29.5.17.png", width = 11.37, height = 7.5, units = 'in', res = 300)
 par(mfrow=c(2,3))
+#png("eyes_opsins_29.5.17.png", width = 11.37, height = 7.5, units = 'in', res = 300)
 plotMA(eyes, main="Eyes vs mixed", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(eyes[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(18,9,23))
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
 })
-with(eyes[GO_c_opsin, ], {
+with(eyes[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
 })
-#with(eyes[melatonin, ], {
-#  points(baseMean, log2FoldChange, col="dimgrey", cex=1.5, lwd=1.5,pch=16)
-#})
-with(eyes[echinopsinsB, ], {
+with(eyes[chaopsin, ], {
   points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=16)
 })
 with(eyes[neuropsins, ], {
-  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=15)
+  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=16)
 })
 with(eyes[peropsins, ], {
   points(baseMean, log2FoldChange, col="yellow", cex=1.5, lwd=2,pch=16)
 })
 with(eyes[rhabdomeric, ], {
-  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=18)
+  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=16)
 })
 with(eyes[rgr_opsins, ], {
   points(baseMean, log2FoldChange, col="orange", cex=1.5, lwd=2,pch=16)
 })
-#legend("right", inset=-.05, title="Opsin type",
-#       o_type, fill=c(rep("red",3),"green","black","purple","yellow","blue","orange"))
+legend("right", inset=-.05, title="Opsin type",
+       o_type, fill=c(rep("red",3),"green","black","purple","yellow","blue","orange"))
 
 plotMA(rn, main="Radial nerve vs mixed", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(rn[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=8)
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
 })
-with(rn[GO_c_opsin, ], {
+with(rn[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
 })
-with(rn[melatonin, ], {
-  points(baseMean, log2FoldChange, col="dimgrey", cex=1.5, lwd=2,pch=17)
-})
-with(rn[echinopsinsB, ], {
-  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=1.5,pch=17)
+with(rn[chaopsin, ], {
+  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=1.5,pch=16)
 })
 with(rn[neuropsins, ], {
-  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=15)
+  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=16)
 })
 with(rn[peropsins, ], {
   points(baseMean, log2FoldChange, col="yellow", cex=1.5, lwd=2,pch=16)
 })
 with(rn[rhabdomeric, ], {
-  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=18)
+  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=16)
 })
 with(rn[rgr_opsins, ], {
   points(baseMean, log2FoldChange, col="orange", cex=1.5, lwd=2,pch=16)
@@ -147,25 +145,22 @@ with(rn[rgr_opsins, ], {
 
 plotMA(tf, main="Tube feet vs mixed", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(tf[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=8)
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
 })
-with(tf[GO_c_opsin, ], {
+with(tf[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
 })
-with(tf[melatonin, ], {
-  points(baseMean, log2FoldChange, col="dimgrey", cex=1.5, lwd=1.5,pch=17)
-})
-with(tf[echinopsinsB, ], {
-  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=17)
+with(tf[chaopsin, ], {
+  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=16)
 })
 with(tf[neuropsins, ], {
-  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=15)
+  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=16)
 })
 with(tf[peropsins, ], {
   points(baseMean, log2FoldChange, col="yellow", cex=1.5, lwd=2,pch=16)
 })
 with(tf[rhabdomeric, ], {
-  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=18)
+  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=16)
 })
 with(tf[rgr_opsins, ], {
   points(baseMean, log2FoldChange, col="orange", cex=1.5, lwd=2,pch=16)
@@ -173,25 +168,22 @@ with(tf[rgr_opsins, ], {
 
 plotMA(eyesVtf, main="Eyes vs Tube feet", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(eyesVtf[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=8)
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
 })
-with(eyesVtf[GO_c_opsin, ], {
+with(eyesVtf[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
 })
-with(eyesVtf[melatonin, ], {
-  points(baseMean, log2FoldChange, col="dimgrey", cex=1.5, lwd=1.5,pch=16)
-})
-with(eyesVtf[echinopsinsB, ], {
-  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=17)
+with(eyesVtf[chaopsin, ], {
+  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=16)
 })
 with(eyesVtf[neuropsins, ], {
-  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=15)
+  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=16)
 })
 with(eyesVtf[peropsins, ], {
   points(baseMean, log2FoldChange, col="yellow", cex=1.5, lwd=2,pch=16)
 })
 with(eyesVtf[rhabdomeric, ], {
-  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=18)
+  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=16)
 })
 with(eyesVtf[rgr_opsins, ], {
   points(baseMean, log2FoldChange, col="orange", cex=1.5, lwd=2,pch=16)
@@ -199,25 +191,22 @@ with(eyesVtf[rgr_opsins, ], {
 
 plotMA(eyesVrn, main="Eyes vs Radial nerve", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(eyesVrn[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=8)
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
 })
-with(eyesVrn[GO_c_opsin, ], {
+with(eyesVrn[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
 })
-with(eyesVrn[melatonin, ], {
-  points(baseMean, log2FoldChange, col="dimgrey", cex=1.5, lwd=1.5,pch=17)
-})
-with(eyesVrn[echinopsinsB, ], {
-  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=17)
+with(eyesVrn[chaopsin, ], {
+  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=16)
 })
 with(eyesVrn[neuropsins, ], {
-  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=15)
+  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=16)
 })
 with(eyesVrn[peropsins, ], {
   points(baseMean, log2FoldChange, col="yellow", cex=1.5, lwd=2,pch=16)
 })
 with(eyesVrn[rhabdomeric, ], {
-  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=18)
+  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=16)
 })
 with(eyesVrn[rgr_opsins, ], {
   points(baseMean, log2FoldChange, col="orange", cex=1.5, lwd=2,pch=16)
@@ -225,25 +214,22 @@ with(eyesVrn[rgr_opsins, ], {
 
 plotMA(rnVtf, main="Radial nerve vs Tube feet", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(rnVtf[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=8)
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
 })
-with(rnVtf[GO_c_opsin, ], {
+with(rnVtf[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
 })
-with(rnVtf[melatonin, ], {
-  points(baseMean, log2FoldChange, col="dimgrey", cex=1.5, lwd=1.5,pch=17)
-})
-with(rnVtf[echinopsinsB, ], {
-  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=17)
+with(rnVtf[chaopsin, ], {
+  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=16)
 })
 with(rnVtf[neuropsins, ], {
-  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=15)
+  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=16)
 })
 with(rnVtf[peropsins, ], {
   points(baseMean, log2FoldChange, col="yellow", cex=1.5, lwd=2,pch=16)
 })
 with(rnVtf[rhabdomeric, ], {
-  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=18)
+  points(baseMean, log2FoldChange, col="blue", cex=1.5, lwd=2,pch=16)
 })
 with(rnVtf[rgr_opsins, ], {
   points(baseMean, log2FoldChange, col="orange", cex=1.5, lwd=2,pch=16)
@@ -283,25 +269,19 @@ dev.off()
 
 library(ggplot2)
 library(reshape2)
-opsins<-all.tpm[c(ciliary_opsin,GO_c_opsin,echinopsinsB,
+opsins<-all.tpm[c(ciliary_opsin,go_opsin,chaopsin,
                   neuropsins,peropsins,rhabdomeric,rgr_opsins),]
-#opsins$group <- row.names(opsins)
-#opsins.m <- melt(opsins, id.vars = "group")
-#ggplot(opsins.m, aes(group, value)) + geom_boxplot()
 
 tissue <- c(rep("mixed",3),rep("eyes",3),rep("rn",3),rep("tf",3))
 o_type <- c("c-opsin1.1","c-opsin1.2","c-opsin1.3","go-opsin",
-            "echinopsinsB","neuropsins","peropsins","rhabdomeric",
+            "chaopsin","neuropsins","peropsins","rhabdomeric",
             "RGR opsins")
 
 df<-data.frame(opsins,o_type)
 names(df)[1:12]<-tissue
 df
 
-#boxplot(df)
-#opsins$group <- row.names(o_type)
 opsins.m <- melt(df, id.vars = "o_type")
-#ggplot(opsins.m, aes(o_type, value, fill = variable)) + geom_boxplot()
 
 opsins.m
 library(gridExtra)
@@ -315,7 +295,6 @@ gA <- ggplotGrob(opsins_top)
 gB <- ggplotGrob(opsins_bottom)
 gA$widths <- gB$widths
 
-#grid.arrange(opsins_top, opsins_bottom, nrow = 2)
 png("opsin_counts.png", width = 3.5, height = 3, units = 'in', res = 300)
 grid.arrange(gA, gB, nrow = 2)
 dev.off()
