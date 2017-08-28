@@ -1,0 +1,14 @@
+#!/bin/bash -login
+
+#PBS -l walltime=48:00:00,nodes=8:ppn=4,mem=132gb
+#PBS -N iqtree_opsins
+#PBS -A ged
+#PBS -M elijahlowe@gmail.com
+#PBS -m abe
+
+cd $SCRATCH/Acanthaster/tree
+~/iqtree-omp-1.5.5-Linux/bin/./iqtree-omp -s opsins.trimal4.aln -m LG+F+I+G4 -bb 1000 -abayes -nt 8 -pre opsin_LG+F+I+G4 -mem 128G -o Sp-melatonin_1A
+#~/iqtree-omp-1.5.5-Linux/bin/./iqtree-omp -s opsins.trimal.aln -m MFP -bb 1000 -abayes -nt 8 -pre opsin_model -mem 128G
+
+qstat -f ${PBS_JOBID}
+
