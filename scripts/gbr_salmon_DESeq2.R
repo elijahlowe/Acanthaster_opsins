@@ -1,4 +1,5 @@
 library("tximportData")
+biocLite("DESeq2")
 library("DESeq2")
 
 setwd("~/Acanthaster_opsins/data/")
@@ -10,7 +11,7 @@ samples <- c("MIX1_S6", "MIX2_S7", "MIX3_S8",
 files<-paste(samples, ".quant.sf", sep="")
 
 read.sample <- function(sample.name) {
-  file.name <- paste(sample.name, ".quant.sf", sep="")
+  file.name <- paste(sample.name, "_quant.sf", sep="")
   result <- read.delim(file.name, head=TRUE,sep="\t", colClasses=c(rep("character",1),rep("numeric",4)))
 }
 
@@ -40,6 +41,7 @@ colnames(all.data)[2:ncol(all.data)] <- samples
 colnames(all.tpm)[2:ncol(all.tpm)] <- samples
 rownames(all.tpm) <-all.tpm$Name
 all.tpm <- all.tpm[,2:ncol(all.tpm)]
+rownames(all.tpm) <- all.data$Name
 
 raw.deseq.data <- all.data[,2:ncol(all.data)]
 raw.deseq.data <- sapply(raw.deseq.data,as.integer)
@@ -79,8 +81,9 @@ summary(eyesVrn)
 summary(eyesVtf)
 summary(rnVtf)
 
-ciliary_opsin=c("gbr.65.46.t1","gbr.65.45.t1","gbr.508.2.t1")
-melatonin=c("gbr.212.22.t1")
+#ciliary_opsin=c("gbr.65.47.t1","gbr.65.48.t1","gbr.508.2.t1","gbr.65.46.t1","gbr.65.45.t1")
+ciliary_opsin=c("gbr.65.47.t1","gbr.508.2.t1","gbr.65.46.t1","gbr.65.45.t1")
+melatonin=c("gbr.212.22.t1","gbr.29.53.t1")
 go_opsin=c("gbr.470.6.t1")
 chaopsin=c("gbr.176.10.t1")
 neuropsins=c("gbr.35.57.t1")
@@ -88,16 +91,17 @@ peropsins=c("gbr.31.87.t1")
 rhabdomeric=c("gbr.176.5.t1")
 rgr_opsins=c("gbr.37.118.t1")
 
-cond<-c(eyes,rn,tf,eyesVrn,eyesVtf,rnVtf)
-titles<-c("Eyes vs mixed","Radial nerve vs mixed","Tube feet vs mixed",
-          "Eyes vs Tube feet","Eyes vs Radial nerve","Radial nerve vs Tube feet")
+#cond<-c(eyes,rn,tf,eyesVrn,eyesVtf,rnVtf)
+#titles<-c("Eyes vs mixed","Radial nerve vs mixed","Tube feet vs mixed",
+#          "Eyes vs Tube feet","Eyes vs Radial nerve","Radial nerve vs Tube feet")
 
-png("colored_opsins_29.5.17.png", width = 11.37, height = 7.5, units = 'in', res = 300)
-par(mfrow=c(2,3))
-#png("eyes_opsins_29.5.17.png", width = 11.37, height = 7.5, units = 'in', res = 300)
+###################################################################
+# MA plot highlighting opsins for various comparisons 
+###################################################################
+png("eyes_opsins.png", width = 11.37, height = 7.5, units = 'in', res = 300)
 plotMA(eyes, main="Eyes vs mixed", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(eyes[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,15,17,18))
 })
 with(eyes[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
@@ -117,12 +121,14 @@ with(eyes[rhabdomeric, ], {
 with(eyes[rgr_opsins, ], {
   points(baseMean, log2FoldChange, col="orange", cex=1.5, lwd=2,pch=16)
 })
-legend("right", inset=-.05, title="Opsin type",
-       o_type, fill=c(rep("red",3),"green","black","purple","yellow","blue","orange"))
-
+# legend("right", inset=-.05, title="Opsin type",
+#        o_type, fill=c(rep("red",3),"green","black","purple","yellow","blue","orange"))
+dev.off()
+png("colored_opsins_29.5.17.png", height = 11.37, width = 7.5, units = 'in', res = 300)
+par(mfrow=c(3,2))
 plotMA(rn, main="Radial nerve vs mixed", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(rn[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,15,17,18))
 })
 with(rn[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
@@ -145,7 +151,7 @@ with(rn[rgr_opsins, ], {
 
 plotMA(tf, main="Tube feet vs mixed", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(tf[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,15,17,18))
 })
 with(tf[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
@@ -168,7 +174,7 @@ with(tf[rgr_opsins, ], {
 
 plotMA(eyesVtf, main="Eyes vs Tube feet", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(eyesVtf[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,15,17,18))
 })
 with(eyesVtf[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
@@ -191,7 +197,7 @@ with(eyesVtf[rgr_opsins, ], {
 
 plotMA(eyesVrn, main="Eyes vs Radial nerve", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(eyesVrn[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,15,17,18))
 })
 with(eyesVrn[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
@@ -214,7 +220,7 @@ with(eyesVrn[rgr_opsins, ], {
 
 plotMA(rnVtf, main="Radial nerve vs Tube feet", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
 with(rnVtf[ciliary_opsin, ], {
-  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,17,18))
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,15,17,18))
 })
 with(rnVtf[go_opsin, ], {
   points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
@@ -235,6 +241,70 @@ with(rnVtf[rgr_opsins, ], {
   points(baseMean, log2FoldChange, col="orange", cex=1.5, lwd=2,pch=16)
 })
 dev.off()
+
+###################################################################
+# MA plot for g protein alpha subunits
+###################################################################
+png("g_protein.png", width = 11.37, height = 7.5, units = 'in', res = 300)
+plotMA(rnVtf, main="G proteins: Eyes vs Mixed", ylim=c(-12,12),colNonSig = "azure2",colSig="azure3")
+with(eyes[c("gbr.104.77.t1","gbr.104.79.t1","gbr.231.19.t1"), ], {
+  points(baseMean, log2FoldChange, col="red", cex=1.5, lwd=2,pch=c(16,15,17,18))
+})
+with(eyes[c("gbr.130.44.t1"), ], {
+  points(baseMean, log2FoldChange, col="green", cex=1.5, lwd=2,pch=16)
+})
+with(eyes[c("gbr.143.10.t1","gbr.33.33.t1","gbr.33.34.t1","gbr.370.25.t1"), ], {
+  points(baseMean, log2FoldChange, col="black", cex=1.5, lwd=2,pch=c(6,17,18,20))
+})
+with(eyes[c("gbr.51.3.t1"), ], {
+  points(baseMean, log2FoldChange, col="purple", cex=1.5, lwd=2,pch=16)
+})
+with(eyes[c("gbr.6.57.t1"), ], {
+  points(baseMean, log2FoldChange, col="yellow", cex=1.5, lwd=2,pch=16)
+})
+dev.off()
+###################################################################
+# TMP count plot per tissue for each opsin
+###################################################################
+library(ggplot2)
+library(reshape2)
+opsins<-all.tpm[c(ciliary_opsin,go_opsin,chaopsin,
+                  neuropsins,peropsins,rhabdomeric,rgr_opsins),]
+sample<- rep((rep(c("sample1","sample2","sample3"),each = 10)),4)
+tissue <- c(rep("mixed",3),rep("eyes",3),rep("rn",3),rep("tf",3))
+o_type <- c("c-opsin1.1a","c-opsin1.1b","c-opsin1.2","c-opsin1.3","go-opsin",
+            "chaopsin","neuropsins","peropsins","rhabdomeric",
+            "RGR opsins")
+
+df<-data.frame(opsins,o_type)
+names(df)[1:12]<-tissue
+
+opsins.m <- melt(df, id.vars = c("o_type",varying = names(df)[1:12]))
+opsins.m <- melt(opsins.m, id.vars = "o_type")
+opsins.m <- cbind(opsins.m,sample)
+tissue.lab <- rep(tissue,each=10)
+opsins.m <- cbind(opsins.m,tissue.lab)
+opsins.m
+
+library(gridExtra)
+library(grid)
+library(gtable)
+
+opsins_top <- ggplot(opsins.m, aes(o_type, value, color=tissue.lab),log="value") + coord_cartesian(ylim = c(300,4300)) +
+  geom_boxplot() + theme(legend.position="none", axis.title = element_blank(),axis.text.x = element_blank(),axis.ticks.x = element_blank()) 
+opsins_bottom <- ggplot(opsins.m, aes(o_type, value, color=tissue.lab),log="value") + coord_cartesian(ylim = c(0,75)) + geom_boxplot() +
+  labs(x = "opsin type", color="Tissue", y = "TPM" ) + theme(axis.text.x = element_text(angle=45, vjust=0.75, hjust=1))
+gA <- ggplotGrob(opsins_top)
+gB <- ggplotGrob(opsins_bottom)
+gA$widths <- gB$widths
+
+ggplot(opsins.m, aes(x = o_type, y = value, color = tissue.lab),log="value") + 
+  geom_boxplot()
+
+png("opsin_counts.png", width = 3, height = 3.5, units = 'in', res = 600)
+grid.arrange(gA, gB, nrow = 2)
+dev.off()
+
 
 ###################################################################
 eyes_up<-(rownames(subset(eyes, padj < 0.1 & log2FoldChange >= 1.5)))
@@ -266,38 +336,10 @@ grid.newpage()
 grid.draw(venn.plot)
 dev.off()
 
-
-library(ggplot2)
-library(reshape2)
-opsins<-all.tpm[c(ciliary_opsin,go_opsin,chaopsin,
-                  neuropsins,peropsins,rhabdomeric,rgr_opsins),]
-
-tissue <- c(rep("mixed",3),rep("eyes",3),rep("rn",3),rep("tf",3))
-o_type <- c("c-opsin1.1","c-opsin1.2","c-opsin1.3","go-opsin",
-            "chaopsin","neuropsins","peropsins","rhabdomeric",
-            "RGR opsins")
-
-df<-data.frame(opsins,o_type)
-names(df)[1:12]<-tissue
-df
-
-opsins.m <- melt(df, id.vars = "o_type")
-
-opsins.m
-library(gridExtra)
-library(grid)
-library(gtable)
-opsins_top <- ggplot(opsins.m, aes(o_type, value, fill = variable,color=variable),log="value") + coord_cartesian(ylim = c(300,4000)) +
-  geom_boxplot() + theme(legend.position="none", axis.title = element_blank(),axis.text.x = element_blank(),axis.ticks.x = element_blank()) 
-opsins_bottom <- ggplot(opsins.m, aes(o_type, value, color=variable),log="value") + coord_cartesian(ylim = c(0,75)) + geom_boxplot() +
-  labs(x = "opsin type", color="Tissue", y = "TPM" ) + theme(axis.text.x = element_text(angle=45, vjust=0.75, hjust=1))
-gA <- ggplotGrob(opsins_top)
-gB <- ggplotGrob(opsins_bottom)
-gA$widths <- gB$widths
-
-png("opsin_counts.png", width = 3.5, height = 3, units = 'in', res = 300)
-grid.arrange(gA, gB, nrow = 2)
-dev.off()
-
-
 plotCounts(ddsMF1, gene=rhabdomeric, intgroup = c("conditions"))
+
+n = 250 
+resOrdered <- eyes[order(eyes$padj),]
+topResults <- rbind( resOrdered[ resOrdered[,'log2FoldChange'] > 0, ][1:n,],
+                     resOrdered[ resOrdered[,'log2FoldChange'] < 0, ][n:1,] )
+topResults[c(1:5,(2*n-4):(2*n)), c('baseMean','log2FoldChange','padj')]  #print results for top and bottom 5 genes
